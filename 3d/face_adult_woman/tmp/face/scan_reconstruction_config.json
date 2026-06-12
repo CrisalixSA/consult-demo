@@ -1,0 +1,13 @@
+{
+    "CamerasFileNames": "./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_0.json ./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_1.json ./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_2.json ./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_3.json ./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_4.json ./tmp/@PATIENT_PATH/rec/face/input/cameras/camera_5.json",
+    "ImagesFileNames": "./tmp/@PATIENT_PATH/media/face_reconstruction/front.jpg ./tmp/@PATIENT_PATH/media/face_reconstruction/left.jpg ./tmp/@PATIENT_PATH/media/face_reconstruction/right.jpg ./tmp/@PATIENT_PATH/media/face_reconstruction/below.jpg ./tmp/@PATIENT_PATH/media/face_reconstruction/left_45.jpg ./tmp/@PATIENT_PATH/media/face_reconstruction/right_45.jpg",
+    "LandmarkCorrespondencesFileName": "./tmp/@PATIENT_PATH/rec/face/input/correspondences.txt",
+    "OutputMeshFileName": "./tmp/@PATIENT_PATH/rec/face/face.k3d",
+    "OutputTextureFileName": "./tmp/@PATIENT_PATH/rec/face/face.jpg",
+    "ScanFileName": "./tmp/@PATIENT_PATH/rec/face/input/scan.k3d",
+    "ScanTextureFileName": "./tmp/@PATIENT_PATH/rec/face/input/scan.jpg",
+    "ScenePropertiesFileName": "./tmp/@PATIENT_PATH/tmp/face/scene_properties.xml",
+    "SimulationTextureFileName": "./tmp/@PATIENT_PATH/rec/face/face.jpg",
+    "TemporalFilesDirectory": "./tmp/@PATIENT_PATH/tmp/face/",
+    "version": "1.0"
+}
