@@ -1,4 +1,6 @@
-# Crisalix Widget — Partner Integration Demo
+# Crisalix Non-Invasive Widget — Partner Integration Demo
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/80b90c2a-4abd-452d-bdae-cc0539e10aca/deploy-status)](https://app.netlify.com/projects/non-invasive-demo/deploys)
 
 A minimal, deployable demo of how a **partner** embeds the Crisalix self-assessment
 widget on their own website. One HTML page, no build step, no framework — exactly
@@ -12,7 +14,6 @@ the footprint a real integration has.
 | File | Purpose |
 |------|---------|
 | `index.html` | The fake partner page: the embed snippet + an example of consuming the results API |
-| `netlify.toml` | Zero-config Netlify deployment (static publish) |
 | `docs/integration-guide.md` | How the integration works and every configuration option |
 | `docs/api-reference.md` | The `CrisalixWidget` JavaScript API and the results payload schema |
 | `docs/troubleshooting.md` | The errors you can hit and what they mean |
@@ -50,15 +51,3 @@ Everything a partner configures lives in **one script tag** in `index.html`
   repo or from the internal partner admin.
 
 See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.
-
-## Deploy to Netlify
-
-1. Drag-and-drop this folder into Netlify (or connect the repo — `netlify.toml`
-   makes it zero-config).
-2. Point the snippet's `src` at a **publicly reachable** Crisalix deployment
-   (e.g. staging) — a Netlify page cannot reach your `localhost`.
-3. Ask Crisalix to **register your Netlify domain** (e.g. `your-demo.netlify.app`)
-   on the partner account. Without it the widget refuses to load — the domain
-   allowlist drives both the server-side checks and the browser-enforced
-   framing policy.
-That's it: the whole partner-side integration is the one script tag.
