@@ -1,289 +1,128 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Faces 3D Consent Demo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=stable-height-20260610" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aurora Clinic — Crisalix Widget Partner Demo</title>
+  <style>
+    :root { --ink: #0f172a; --muted: #64748b; --brand: #137191; --soft: #f1f5f9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; color: var(--ink); background: #fff; }
+    header { padding: 1.25rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: baseline; gap: 1rem; }
+    header h1 { font-size: 1.1rem; margin: 0; }
+    header span { font-size: .8rem; color: var(--muted); }
+    main { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .hero { text-align: center; padding: 2rem 0 2.5rem; }
+    .hero h2 { font-size: 1.8rem; margin: 0 0 .5rem; }
+    .hero p { color: var(--muted); margin: 0; }
+    section { margin-top: 2.5rem; }
+    section > h3 { font-size: 1rem; text-transform: uppercase; letter-spacing: .08em; color: var(--brand); }
+    .panel { border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.25rem; background: var(--soft); }
+    button { background: var(--brand); color: #fff; border: 0; border-radius: 10px; padding: .7rem 1.2rem; font-size: .95rem; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    #results-output { margin-top: 1rem; font-size: .9rem; }
+    #results-output .note { color: var(--muted); }
+    #results-output .error { color: #b91c1c; }
+    #results-output table { width: 100%; border-collapse: collapse; margin-top: .5rem; background: #fff; border-radius: 10px; overflow: hidden; }
+    #results-output th, #results-output td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid #e2e8f0; }
+    #results-output th { background: #fff; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem; border-top: 1px solid #e2e8f0; }
+    code { background: var(--soft); padding: .1rem .35rem; border-radius: 5px; font-size: .85em; }
+  </style>
 </head>
 <body>
-  <main class="phone-shell">
-    <header class="topbar">
-      <button class="back-button" aria-label="Back">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="progress" aria-label="Progress"><span style="width:50%"></span></div>
-    </header>
+  <header>
+    <h1>Aurora Clinic</h1>
+    <span>a fictional partner site — Crisalix widget integration demo</span>
+  </header>
 
-    <section class="content">
-      <h1>Complete consent form</h1>
-      <p class="lead">Please read the disclaimer and answer all questions accurately.</p>
-
-      <article class="disclaimer-card">
-        <button class="disclaimer-title" type="button" id="toggleDisclaimer" aria-expanded="false">
-          <span>Dermal Filler Disclaimer</span>
-          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="disclaimer-copy collapsed" id="disclaimerCopy">
-          <p><strong>PATIENT CONSENT:</strong> This is an informed consent form that has been prepared to help inform you of the potential benefits and risks of dermal filler injections. It is important that you read this information carefully and discuss fully with your practitioner before proceeding with treatment.</p>
-          <p>It is also important that you take as much time as you need to consider the treatment carefully, weighing up all your options before reaching an informed decision. It is essential that you are aware of your right to have a second opinion and you are encouraged to ask any questions that come to mind throughout the entirety of the process.</p>
-          <p><strong>INTRODUCTION</strong></p>
-          <p>Injection of dermal fillers aims to smooth out facial folds and wrinkles, adds volume to the tissues (e.g. lips), and helps to contour facial features. Most dermal fillers used are based on Hyaluronic acid, they may also contain lidocaine, a local anaesthetic to help with pain control.</p>
-          <p><strong>RESULTS</strong></p>
-          <p>Hyaluronic acid dermal fillers have been shown to be safe and effective, results can last up to 12 months or longer. After initial treatment, a period of 2 weeks should be allowed for the filler to settle and for residual bruising and swelling to subside. There is no guarantee that you will not require additional treatment to achieve the results you seek.</p>
-          <p><strong>RISKS AND COMPLICATIONS</strong> Understanding the risks of dermal filler injections is essential to make an informed decision about your treatment. No procedure is completely risk-free, and all potential risks must be explained before going ahead with treatment.</p>
-          <p>Common complications include pain, bleeding, bruising, tenderness, swelling, faintness, and discomfort. Uncommon complications include infection, cold sore reactivation, lumps or nodules, migration, inflammatory reaction, granuloma formation, and skin discolouration.</p>
-          <p>Rare complications include allergic reaction, anaphylaxis, vascular occlusion, tissue necrosis, and filler blindness. In the event of severe pain, visual symptoms, or signs of infection, urgent medical assessment may be required.</p>
-          <p>I have been advised of the relevant information associated with this treatment and I confirm that I fully understand this advice. I have been given the opportunity to discuss my desired outcome fully in order for me to make an informed decision.</p>
-          <p><strong>CLINICAL PHOTOS AND VIDEOS:</strong> I agree to and authorise the taking of clinical photographs and videos. I understand that these clinical photographs and videos will form part of and will be kept with my confidential medical records.</p>
-          <p>I certify that I have read the above consent and that I fully understand it. I have been given ample opportunity for discussion and all my questions have been answered to my satisfaction. I hereby consent to this procedure.</p>
-        </div>
-        <button class="read-more" type="button" id="readMore">Read more</button>
-      </article>
-
-      <form id="consentForm" novalidate>
-        <section class="photo-section real-face3d-widget" id="face3dWidget" aria-labelledby="face3dTitle" data-face3d-widget>
-          <div class="widget-progress" aria-label="3D widget progress">
-            <span class="active" data-real-step-dot="photos">1</span>
-            <span data-real-step-dot="ranking">2</span>
-            <span data-real-step-dot="rating">3</span>
-          </div>
-
-          <div class="widget-header-row">
-            <div>
-              <h2 id="face3dTitle">Create your 3D preview</h2>
-              <p>Start with 3 quick photos so your clinic can better understand your facial features and personalize your consultation.</p>
-            </div>
-            <span class="widget-badge widget-logo-badge"><img src="/assets/crisalix-virtual-aesthetics-logo.jpg" alt="Crisalix Virtual Aesthetics" /></span>
-          </div>
-
-          <div class="real-widget-panel active" data-real-panel="photos">
-            <div class="real-step-heading">
-              <h3 data-photo-title>Front photo</h3>
-              <p class="photo-step-instruction" data-photo-label>First, take your front photo</p>
-              <p data-photo-hint>Look straight ahead and align your face with the outline. When you're ready, tap the capture button.</p>
-            </div>
-            <div class="real-photo-capture-card" data-photo-card>
-              <img data-photo-ghost src="/3d/face_adult_woman/media/face_reconstruction/front.jpg" alt="Front selfie example for 3D preview" />
-              <div class="photo-ghost-oval" aria-hidden="true"></div>
-              <div class="photo-ready-message" data-photo-complete hidden>
-                <h3>Before continuing</h3>
-                <p>Perfect. Your personalized 3D preview is ready.</p>
-                <p>Next, we'll help you identify what you like most about your face and the areas you would most like to improve.</p>
-              </div>
-              <button type="button" class="real-capture-button" data-photo-capture aria-label="Capture front selfie">
-                <svg width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5h1.879a1.5 1.5 0 0 0 1.06-.44l.872-.871a1.5 1.5 0 0 1 1.06-.439h2.758a1.5 1.5 0 0 1 1.06.44l.872.87a1.5 1.5 0 0 0 1.06.44h1.879A1.75 1.75 0 0 1 21 9.25v8A1.75 1.75 0 0 1 19.25 19H4.75A1.75 1.75 0 0 1 3 17.25v-8A1.75 1.75 0 0 1 4.75 7.5h2Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.25 13.5a3.25 3.25 0 1 1-6.5 0 3.25 3.25 0 0 1 6.5 0Z"/></svg>
-              </button>
-            </div>
-            <div class="real-photo-strip" data-photo-strip></div>
-            <button class="widget-primary photo-continue-button" type="button" data-photo-continue hidden>Continue</button>
-          </div>
-
-          <div class="real-widget-panel" data-real-panel="ranking">
-            <div class="real-step-heading compact">
-              <h3 data-ranking-prompt>Select the area you feel happiest about first.</h3>
-              <p data-ranking-hint><span>Then continue ranking the remaining areas one by one until all 8 areas are ordered.</span><strong>1 = Favorite area</strong><strong>8 = Least favorite area</strong></p>
-            </div>
-            <div class="real-viewer-shell ranking-shell">
-              <canvas id="rankingReal3dCanvas" data-real-ranking-canvas></canvas>
-              <div class="real-loading" data-ranking-loading>Loading 3D…</div>
-              <div class="real-ranking-intro minimal" data-ranking-intro>
-                <button type="button" data-ranking-start>Let's go!</button>
-              </div>
-              <div class="real-hotspots hidden" data-real-hotspots></div>
-              <div class="real-selected-help" data-selected-help hidden>Drag selected areas to reorder</div>
-              <ol class="real-selected-list" data-selected-priorities></ol>
-              <button class="widget-primary ranking-continue-overlay" type="button" data-ranking-continue hidden disabled>Continue to assessment</button>
-            </div>
-          </div>
-
-          <div class="real-widget-panel" data-real-panel="rating">
-            <div class="real-step-heading compact">
-              <h3 data-rating-title>Let us know more about you</h3>
-              <p data-rating-subtitle hidden></p>
-            </div>
-            <div class="real-viewer-shell rating-shell">
-              <canvas id="ratingReal3dCanvas" data-real-rating-canvas></canvas>
-              <div class="real-loading" data-rating-loading>Loading 3D…</div>
-              <span class="real-rotate-hint">Drag to rotate · Scroll or pinch to zoom</span>
-            </div>
-            <div class="real-rating-card" data-rating-card></div>
-            <div class="widget-summary" data-real-summary hidden></div>
-          </div>
-
-          <input type="hidden" name="face3d_payload" id="face3dPayload" value="" />
-          <p class="widget-error" id="face3dError" hidden>Please complete the Crisalix 3D widget before submitting the consent form.</p>
-        </section>
-
-        <div id="questionList"></div>
-
-        <button class="upload-tile identity" type="button">
-          <span class="tile-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-13Z" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </span>
-          <span class="tile-text"><strong>Identity (optional)</strong><small>ID, driving license or passport</small></span>
-          <span class="tile-plus">+</span>
-        </button>
-
-        <fieldset class="question marketing-question" data-required="true">
-          <legend>I agree to allow my treatment photos to be used for promotional and marketing purposes.</legend>
-          <div class="choice-row boxed-choice-row">
-            <label class="choice-card"><span>Yes</span><input type="radio" name="marketing" value="yes" required></label>
-            <label class="choice-card"><span>No</span><input type="radio" name="marketing" value="no" required></label>
-          </div>
-          <input class="comment-input" name="marketing_comment" placeholder="Comments" />
-          <p class="error-message">This field is required!</p>
-        </fieldset>
-
-        <fieldset class="question terms-question">
-          <legend>I accept the updated terms and conditions of Faces Consent, which include receiving aftercare guidance, treatment-related recommendations, by communication channels. I understand that I can opt out at any time.</legend>
-          <div class="choice-row boxed-choice-row">
-            <label class="choice-card"><span>Yes</span><input type="radio" name="terms" value="yes"></label>
-            <label class="choice-card"><span>No</span><input type="radio" name="terms" value="no"></label>
-          </div>
-          <input class="comment-input" name="terms_comment" placeholder="Comments" />
-        </fieldset>
-
-        <section class="note-section">
-          <h2>Note</h2>
-          <textarea placeholder="Add a note for the clinic"></textarea>
-        </section>
-
-        <section class="signature-section">
-          <label>Client signature</label>
-          <div class="signature-pad" id="signaturePad">
-            <canvas id="signatureCanvas" width="680" height="220"></canvas>
-            <div class="signature-empty" id="signatureEmpty">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 20h16M6 16l10.4-10.4a2.1 2.1 0 0 1 3 3L9 19H6v-3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <h2>Client signature</h2>
-              <p>Note: I certify that I have read the above consent and that I fully understand it.</p>
-            </div>
-          </div>
-          <button type="button" class="clear-signature" id="clearSignature">Clear signature</button>
-        </section>
-
-        <button class="next-button" type="submit">NEXT (to clinic view)</button>
-      </form>
-    </section>
-    <footer>Powered by <strong>Faces</strong></footer>
-  </main>
-
-
-  <main class="clinic-appointments-page" id="clinicAppointments" hidden>
-    <button class="clinic-back" type="button" data-back-to-consent aria-label="Back">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <section class="clinic-home-content">
-      <h1>Jaime Garcia's appointments</h1>
-      <nav class="clinic-tabs" aria-label="Clinic sections">
-        <button class="active">Appointments</button>
-        <button>Consent</button>
-        <button>Medical</button>
-        <button>Aftercare</button>
-      </nav>
-
-      <button class="create-appointment-row" type="button">
-        <span class="clinic-round-icon">
-          <svg viewBox="0 0 24 24" width="34" height="34" fill="none"><path d="M7 2v4M17 2v4M4.5 8.5h15M6.5 5h11A2.5 2.5 0 0 1 20 7.5v10A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10A2.5 2.5 0 0 1 6.5 5Z" stroke="currentColor" stroke-width="1.8"/><path d="M12 12v5M9.5 14.5h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-        </span>
-        <span><strong>Create an appointment for Jaime</strong><small>Create a booking and send consent to Jaime.</small></span>
-        <svg class="clinic-chevron" viewBox="0 0 24 24" width="34" height="34" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-
-      <h2 class="clinic-section-title">Upcoming bookings</h2>
-      <p class="clinic-date">Thu 11 Jun, 2026</p>
-
-      <article class="appointment-card" data-open-clinic-profile>
-        <div class="appointment-left-bar"></div>
-        <div class="appointment-main">
-          <div class="appointment-badges"><span>SY</span><span class="red-doc">▤</span></div>
-          <p>Jaime Garcia</p>
-          <h3>12:00 pm – 12:45 pm</h3>
-          <p>1ml Lip filler</p>
-          <p>Clinic for Prescribers Stafford</p>
-        </div>
-        <aside class="appointment-price">
-          <span>Unpaid</span>
-          <strong>£199.00</strong>
-          <button type="button" class="assessment-link" data-open-clinic-profile>
-            <span class="assessment-link-kicker">3D Self-Assessment ready</span>
-            <strong>Discover treatment opportunities</strong>
-            <small>Open Jaime’s 8 facial-area answers and 3D review</small>
-            <em>View insights →</em>
-          </button>
-        </aside>
-      </article>
-    </section>
-  </main>
-
-  <main class="clinic-profile-page" id="clinicProfile" hidden>
-    <section class="profile-left-pane">
-      <div class="profile-avatar">JG</div>
-      <h1>Jaime Garcia</h1>
-      <p class="profile-phone">+41 0787202521</p>
-      <div class="profile-actions">
-        <span class="red">▤</span><span class="red">▣</span><span class="green">▣</span><span>☏</span><span>☘</span>
-      </div>
-      <h2>Manage appointment</h2>
-      <button class="mini-back" type="button" data-back-to-appointments>‹</button>
-
-      <nav class="appointment-menu">
-        <button class="menu-row active"><span>▧</span><strong>View and edit consent form</strong><em>⌃</em></button>
-        <button class="menu-row"><span></span><strong>Batch number</strong><em>›</em></button>
-        <button class="menu-row"><span></span><strong>Before and after photos</strong><em>›</em></button>
-        <button class="menu-row"><span></span><strong>Facial mapping</strong><em>›</em></button>
-        <button class="menu-row self-assessment-row active-secondary"><span>◉</span><strong>3D Self-Assessment</strong><small>Completed by patient</small><em>⌃</em></button>
-        <button class="menu-row resend"><span>▷</span><strong>Re-send to client</strong><em>›</em></button>
-      </nav>
-
-      <div class="profile-payment-panel">
-        <h3>Treatments</h3>
-        <div class="profile-treatment-list" data-treatment-list>
-          <div class="payment-line" data-treatment-id="lip-filler"><span>⌑</span><p>1ml Lip filler</p><strong>£199.00</strong></div>
-        </div>
-        <div class="total-line"><u>Total due</u><strong data-treatment-total>£199.00</strong></div>
-        <div class="payment-actions"><button>⋮</button><button>No-show</button><button class="checkout">Checkout</button></div>
-      </div>
-    </section>
-
-    <section class="profile-right-pane">
-      <div class="right-toolbar"><button type="button" data-back-to-appointments>×</button><button type="button">↗</button></div>
-      <section class="clinic-assessment-review">
-        <header>
-          <p>3D Self-Assessment</p>
-          <h2>Patient 3D self-assessment</h2>
-          <span>Completed before appointment · 8 areas answered</span>
-        </header>
-        <div class="clinic-assessment-layout">
-          <div class="clinic-3d-review">
-            <canvas id="clinicReview3dCanvas" data-clinic-review-canvas></canvas>
-            <div class="clinic-review-loading" data-clinic-review-loading>Loading 3D…</div>
-            <div class="clinic-3d-hotspots" data-clinic-3d-hotspots aria-label="3D facial areas"></div>
-            <span>Drag to rotate · Select an area from the answers panel</span>
-          </div>
-          <aside class="clinic-answers-panel">
-            <div class="answers-heading"><strong>Area answers</strong><span>Patient responses</span></div>
-            <div class="clinic-area-list" data-clinic-area-list></div>
-          </aside>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <div class="success-modal" id="successModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="success-card">
-      <div class="success-icon">✓</div>
-      <h2>Consent form ready</h2>
-      <p>This demo submits the normal consent answers plus the embedded Crisalix 3D widget payload: 3 before photos, 8 ordered priorities and 8 area answers.</p>
-      <button type="button" id="closeSuccess">Close</button>
+  <main>
+    <div class="hero">
+      <h2>See yourself in 3D before you decide</h2>
+      <p>Complete a short self-assessment and preview your own 3D model — right here, no account needed.</p>
     </div>
-  </div>
 
-  <script src="/app.js"></script>
-  <script type="module" src="/face3d-real-widget.js?v=skip-photo-complete-other-input-20260611"></script>
-  <script type="module" src="/clinic-view.js"></script>
+    <section>
+      <h3>Your self-assessment</h3>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           THE CRISALIX WIDGET SNIPPET — this is everything a partner embeds.
+
+           Configure TWO values in the src below:
+             1. The widget origin  (where the Crisalix app runs)
+             2. Your app_token     (from your Crisalix partner account)
+
+           ⚠ Keep this as a literal <script> tag exactly as written. Injecting
+             it dynamically (createElement/appendChild) breaks the SDK — see
+             docs/troubleshooting.md.
+
+           ℹ Local development only: to see a 3D locally without the CoreApp
+             backend, add data-mode="demo" to this tag. The flag is IGNORED by
+             the server everywhere outside development, so leaving it in does
+             nothing on a real deployment — but a reference snippet ships in
+             its production shape.
+           ══════════════════════════════════════════════════════════════════ -->
+      <div id="crisalix-widget"></div>
+      <script src="https://non-invasive-staging.crisalix.com/widget.js?app_token=pk_f0de80e73b0d3a8bdb765d11fa5fd0dea1ef07d60ed2b840" defer
+              data-container="#crisalix-widget"
+              data-clinic-id="aurora-downtown"
+              data-height="720"></script>
+      <!-- ═══════════════════════════ end snippet ══════════════════════════ -->
+    </section>
+
+    <section>
+      <h3>Pull the results into your own page</h3>
+      <div class="panel">
+        <p style="margin-top:0">Once the visitor completes the assessment, your page can retrieve their
+          (anonymous) results through the SDK and use them however you like — feed a treatment
+          recommender, prefill a booking form, drive your own UI.</p>
+        <button id="get-results">Get assessment results</button>
+        <div id="results-output"><p class="note">Complete the assessment above, then click the button.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Demo host page for the Crisalix embeddable widget · see <code>docs/</code> for the partner integration guide
+  </footer>
+
+  <script>
+    // ── Partner-side example: consuming the SDK results API ────────────────
+    const output = document.getElementById("results-output")
+    const button = document.getElementById("get-results")
+
+    const render = (payload) => {
+      const ratings = payload.ratings.map((r) =>
+        `<tr><td>${r.region_name}</td><td>${r.rating}/10</td><td>${r.notes || "—"}</td></tr>`
+      ).join("")
+      const intake = payload.intake.map((q) =>
+        `<tr><td>${q.question}</td><td colspan="2">${q.answer}</td></tr>`
+      ).join("")
+      output.innerHTML = `
+        <p class="note">payload <code>version: ${payload.version}</code> · status: <strong>${payload.status}</strong></p>
+        <table>
+          <tr><th>Area</th><th>Rating</th><th>Notes</th></tr>
+          ${ratings || '<tr><td colspan="3">No ratings</td></tr>'}
+          <tr><th>Question</th><th colspan="2">Answer</th></tr>
+          ${intake || '<tr><td colspan="3">No intake answers</td></tr>'}
+        </table>`
+    }
+
+    button.addEventListener("click", () => {
+      if (!window.CrisalixWidget) {
+        output.innerHTML = '<p class="error">The SDK has not loaded — check the snippet configuration.</p>'
+        return
+      }
+      button.disabled = true
+      window.CrisalixWidget.getSelfAssessmentResults()
+        .then((payload) => render(payload))
+        .catch((error) => {
+          output.innerHTML = error.message.includes("assessment_not_completed")
+            ? '<p class="note">The assessment is not finished yet — results unlock once the visitor completes every step.</p>'
+            : `<p class="error">${error.message}</p>`
+        })
+        .finally(() => { button.disabled = false })
+    })
+  </script>
 </body>
 </html>
