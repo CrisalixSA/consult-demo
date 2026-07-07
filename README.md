@@ -17,21 +17,26 @@ the footprint a real integration has.
 | `docs/api-reference.md` | The `CrisalixWidget` JavaScript API and the results payload schema |
 | `docs/troubleshooting.md` | The errors you can hit and what they mean |
 
-## Run it locally
+## Run it
 
-1. Have the Crisalix app running (`bin/dev` in the main repo → `http://localhost:3009`).
-2. Serve **this** folder over HTTP (the widget will not work from `file://`):
+The snippet in `index.html` ships pointed at the **Crisalix staging**
+deployment with the staging Crisalix partner token — real backend, real 3D.
+
+1. Serve **this** folder over HTTP (the widget will not work from `file://`):
 
    ```sh
    npx serve .          # or: python3 -m http.server 8080
    ```
 
-3. Open `http://localhost:8080`. The snippet in `index.html` ships with the locally
-   seeded Crisalix partner token and `localhost` is on that partner's domain
-   allowlist, so it works out of the box.
-4. Optional — to see the 3D preview locally (the dev backend has no 3D
-   pipeline), add `data-mode="demo"` to the snippet's script tag. The flag is
-   development-only: real deployments ignore it entirely.
+2. Open `http://localhost:8080` — `localhost` is on the staging partner's
+   domain allowlist, so the page works as-is.
+
+### Against a local backend instead
+
+Point the snippet's `src` at `http://localhost:3009` with the locally seeded
+partner token (printed by `bin/rails db:seed` in the main repo). Optional: add
+`data-mode="demo"` to the tag to see a 3D without the CoreApp pipeline — the
+flag is development-only and ignored by real deployments.
 
 ## Configure it
 
