@@ -1,0 +1,59 @@
+# Crisalix Widget — Partner Integration Demo
+
+A minimal, deployable demo of how a **partner** embeds the Crisalix self-assessment
+widget on their own website. One HTML page, no build step, no framework — exactly
+the footprint a real integration has.
+
+> This repo plays the role of the **partner's site** (a fictional "Aurora Clinic").
+> The widget itself is served by the Crisalix application — this demo only embeds it.
+
+## What's in the box
+
+| File | Purpose |
+|------|---------|
+| `index.html` | The fake partner page: the embed snippet + an example of consuming the results API |
+| `netlify.toml` | Zero-config Netlify deployment (static publish) |
+| `docs/integration-guide.md` | How the integration works and every configuration option |
+| `docs/api-reference.md` | The `CrisalixWidget` JavaScript API and the results payload schema |
+| `docs/troubleshooting.md` | The errors you can hit and what they mean |
+
+## Run it locally
+
+1. Have the Crisalix app running (`bin/dev` in the main repo → `http://localhost:3009`).
+2. Serve **this** folder over HTTP (the widget will not work from `file://`):
+
+   ```sh
+   npx serve .          # or: python3 -m http.server 8080
+   ```
+
+3. Open `http://localhost:8080`. The snippet in `index.html` ships with the locally
+   seeded Crisalix partner token and `localhost` is on that partner's domain
+   allowlist, so it works out of the box.
+
+## Configure it
+
+Everything a partner configures lives in **one script tag** in `index.html`
+(marked with a banner comment). Two values matter:
+
+- **The widget origin** — where the Crisalix app runs (`http://localhost:3009`
+  locally; your staging/production URL when deployed).
+- **Your `app_token`** — the publishable token of your partner account
+  (`pk_…`). Locally, take it from the `bin/rails db:seed` output of the main
+  repo or from the internal partner admin.
+
+See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.
+
+## Deploy to Netlify
+
+1. Drag-and-drop this folder into Netlify (or connect the repo — `netlify.toml`
+   makes it zero-config).
+2. Point the snippet's `src` at a **publicly reachable** Crisalix deployment
+   (e.g. staging) — a Netlify page cannot reach your `localhost`.
+3. Ask Crisalix to **register your Netlify domain** (e.g. `your-demo.netlify.app`)
+   on the partner account. Without it the widget refuses to load — the domain
+   allowlist drives both the server-side checks and the browser-enforced
+   framing policy.
+4. Remove `data-mode="demo"` from the snippet — it is a local-development flag
+   and is ignored by real deployments anyway.
+
+That's it: the whole partner-side integration is the one script tag.
