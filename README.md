@@ -29,6 +29,9 @@ the footprint a real integration has.
 3. Open `http://localhost:8080`. The snippet in `index.html` ships with the locally
    seeded Crisalix partner token and `localhost` is on that partner's domain
    allowlist, so it works out of the box.
+4. Optional — to see the 3D preview locally (the dev backend has no 3D
+   pipeline), add `data-mode="demo"` to the snippet's script tag. The flag is
+   development-only: real deployments ignore it entirely.
 
 ## Configure it
 
@@ -53,7 +56,4 @@ See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.
    on the partner account. Without it the widget refuses to load — the domain
    allowlist drives both the server-side checks and the browser-enforced
    framing policy.
-4. Remove `data-mode="demo"` from the snippet — it is a local-development flag
-   and is ignored by real deployments anyway.
-
 That's it: the whole partner-side integration is the one script tag.

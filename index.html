@@ -56,16 +56,17 @@
              it dynamically (createElement/appendChild) breaks the SDK — see
              docs/troubleshooting.md.
 
-           ⚠ data-mode="demo" is an internal development flag for local runs
-             without the 3D backend. REMOVE IT when pointing at a real
-             (staging/production) origin.
+           ℹ Local development only: to see a 3D locally without the CoreApp
+             backend, add data-mode="demo" to this tag. The flag is IGNORED by
+             the server everywhere outside development, so leaving it in does
+             nothing on a real deployment — but a reference snippet ships in
+             its production shape.
            ══════════════════════════════════════════════════════════════════ -->
       <div id="crisalix-widget"></div>
       <script src="http://localhost:3009/widget.js?app_token=pk_ade44f94b4b2cc19cffda6afd83470c28b6bfb2b628c3341" defer
               data-container="#crisalix-widget"
               data-clinic-id="aurora-downtown"
-              data-height="720"
-              data-mode="demo"></script>
+              data-height="720"></script>
       <!-- ═══════════════════════════ end snippet ══════════════════════════ -->
     </section>
 
