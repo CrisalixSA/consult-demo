@@ -21,7 +21,7 @@ the footprint a real integration has.
 ## Run it
 
 The snippet in `index.html` ships pointed at the **Crisalix staging**
-deployment with the staging Crisalix partner token — real backend, real 3D.
+deployment with the staging partner's `partner_id` — real backend, real 3D.
 
 1. Serve **this** folder over HTTP (the widget will not work from `file://`):
 
@@ -35,7 +35,7 @@ deployment with the staging Crisalix partner token — real backend, real 3D.
 ### Against a local backend instead
 
 Point the snippet's `src` at `http://localhost:3009` with the locally seeded
-partner token (printed by `bin/rails db:seed` in the main repo). Optional: add
+`partner_id` (printed by `bin/rails db:seed` in the main repo). Optional: add
 `data-mode="demo"` to the tag to see a 3D without the CoreApp pipeline — the
 flag is development-only and ignored by real deployments.
 
@@ -46,8 +46,11 @@ Everything a partner configures lives in **one script tag** in `index.html`
 
 - **The widget origin** — where the Crisalix app runs (`http://localhost:3009`
   locally; your staging/production URL when deployed).
-- **Your `app_token`** — the publishable token of your partner account
-  (`pk_…`). Locally, take it from the `bin/rails db:seed` output of the main
-  repo or from the internal partner admin.
+- **Your `partner_id`** — the publishable identifier of your partner account
+  (no prefix). Locally, take it from the `bin/rails db:seed` output of the
+  main repo or from the internal partner admin.
+
+The optional `data-doctor-id` and `data-metadata` attributes let you attach
+your own data to each consultation.
 
 See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.

@@ -50,11 +50,15 @@
 
            Configure TWO values in the src below:
              1. The widget origin  (where the Crisalix app runs)
-             2. Your app_token     (from your Crisalix partner account)
+             2. Your partner_id    (from your Crisalix partner account)
 
            ⚠ Keep this as a literal <script> tag exactly as written. Injecting
              it dynamically (createElement/appendChild) breaks the SDK — see
              docs/troubleshooting.md.
+
+           ℹ Optional: data-doctor-id and data-metadata attach your own
+             practitioner reference and free-form metadata to every
+             consultation started here — see docs/integration-guide.md.
 
            ℹ Local development only: to see a 3D locally without the CoreApp
              backend, add data-mode="demo" to this tag. The flag is IGNORED by
@@ -63,9 +67,11 @@
              its production shape.
            ══════════════════════════════════════════════════════════════════ -->
       <div id="crisalix-widget"></div>
-      <script src="https://non-invasive-staging.crisalix.com/widget.js?app_token=pk_f0de80e73b0d3a8bdb765d11fa5fd0dea1ef07d60ed2b840" defer
+      <script src="https://non-invasive-staging.crisalix.com/widget.js?partner_id=f0de80e73b0d3a8bdb765d11fa5fd0dea1ef07d60ed2b840" defer
               data-container="#crisalix-widget"
               data-clinic-id="aurora-downtown"
+              data-doctor-id="aurora-dr-0042"
+              data-metadata='{"campaign":"aurora-landing","locale":"en"}'
               data-height="720"></script>
       <!-- ═══════════════════════════ end snippet ══════════════════════════ -->
     </section>
