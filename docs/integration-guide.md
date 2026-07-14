@@ -15,16 +15,16 @@ Integration is a single script tag:
 
 ```html
 <div id="crisalix-widget"></div>
-<script src="https://<crisalix-host>/widget.js?app_token=pk_YOUR_TOKEN" defer
+<script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
         data-container="#crisalix-widget"></script>
 ```
 
 ## Prerequisites
 
 1. **A partner account** with Crisalix. You receive:
-   - your **`app_token`** (`pk_…`) — a *publishable* identifier, safe to ship
-     in your HTML (same model as a Stripe publishable key or a Maps API key).
-     It is not a secret; it identifies your account.
+   - your **`partner_id`** — a *publishable* identifier, safe to ship in your
+     HTML (same model as a Stripe publishable key or a Maps API key). It is
+     not a secret; it identifies your account. The value carries no prefix.
    - a registered **domain allowlist** — the exact hostnames your pages are
      served from (e.g. `www.auroraclinic.com`). The widget only loads and only
      renders inside pages on those domains. Adding or changing domains is a
@@ -35,8 +35,8 @@ Integration is a single script tag:
 ## How it works
 
 ```
-Your page ──/widget.js?app_token──▶ Crisalix (validates token + domain, serves the SDK)
-    │  the SDK injects ──▶ <iframe src=".../widget/start?app_token=...">
+Your page ──/widget.js?partner_id──▶ Crisalix (validates identifier + domain, serves the SDK)
+    │  the SDK injects ──▶ <iframe src=".../widget/start?partner_id=...">
     │                          │ Crisalix mints a signed, short-lived visitor session
     ▼                          ▼
 your visitors complete the assessment entirely inside the iframe
@@ -58,14 +58,16 @@ Three properties worth knowing:
 
 ## The snippet, option by option
 
-The `app_token` travels **in the script `src` query string** — that request is
-validated before the SDK is even served.
+The `partner_id` travels **in the script `src` query string** — that request
+is validated before the SDK is even served.
 
 | Where | Option | Required | Default | What it does |
 |-------|--------|----------|---------|--------------|
-| `src` query | `app_token` | **Yes** (production) | — | Identifies your partner account. Requests with an unknown or deactivated token are refused. |
+| `src` query | `partner_id` | **Yes** (production) | — | Identifies your partner account. Requests with an unknown or deactivated identifier are refused. |
 | attribute | `data-container` | No | `[data-crisalix-widget]` | CSS selector of the element the widget iframe is injected into. |
 | attribute | `data-clinic-id` | No | — | **Your** identifier for the clinic/microsite this page belongs to. First use auto-registers it on your account; every assessment started here is attributed to it. Use it to segment leads per location. |
+| attribute | `data-doctor-id` | No | — | **Your** identifier for the doctor/practitioner behind this page (any string up to 255 characters — it maps to nothing on Crisalix's side). Stored on every consultation started here, for attribution and reporting. Never exposed through the results API. |
+| attribute | `data-metadata` | No | — | A JSON **object** of your own data (the raw attribute must stay ≤ 2048 bytes), attached to every consultation started here, for attribution and reporting. Invalid JSON, non-object values, or oversized payloads are silently ignored — they never block the widget. Never exposed through the results API. |
 | attribute | `data-height` | No | `700` | Fixed height (px) of the widget iframe. The widget's screens are phone-like and scroll internally — the iframe never resizes itself. |
 
 Notes:
@@ -96,7 +98,7 @@ the [API reference](api-reference.md) for exactly what your page can read).
 ## Going to production checklist
 
 - [ ] Snippet `src` points at the production Crisalix host.
-- [ ] `app_token` is your production token.
+- [ ] `partner_id` is your production identifier.
 - [ ] Every hostname that will embed the widget is on your domain allowlist.
 - [ ] `data-mode` is **not** present (internal development flag).
 - [ ] Your page is served over HTTPS.
