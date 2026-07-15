@@ -21,7 +21,30 @@ check the Network tab.
 |---------|-------|-----|
 | Everything worked yesterday, today every request is 403 `unknown_token` | Your `partner_id` was rotated. Rotation is immediate — the old identifier dies the moment a new one is issued. | Update the snippet with the current `partner_id`. |
 | 3D preview never appears when testing locally against a dev backend | The local backend has no 3D pipeline. | For local runs only, add `data-mode="demo"` to the snippet (ignored outside development). Remove it for staging/production. |
-| The page scrolls to a giant white area | You are fighting the fixed-height design — the iframe height is a constant (`data-height`, default 700px); widget screens scroll internally. | Don't try to autosize the iframe; adjust `data-height` if you want a taller stage. |
+| The page scrolls to a giant white area | You are trying to make the iframe grow with its content. The iframe is a fixed stage (`data-height`, default 700px); widget screens scroll internally, and the SDK has no content-resize protocol — the content height is not readable cross-origin. | Don't autosize to content — see [Sizing the stage](#sizing-the-stage). |
+
+## Sizing the stage
+
+Two different things get called "resizing the iframe" — one is unsupported,
+the other works fine:
+
+- **Autosizing to content** — making the iframe grow and shrink as the visitor
+  moves through the steps — is **unsupported**. The content height is not
+  readable cross-origin, the SDK exposes no resize protocol, and a stage that
+  reflowed on every step would shift your page's layout and reset the 3D
+  canvas. This is what the warning above is about.
+- **A bigger stage** is entirely up to you. Set `data-height` to a larger
+  constant, or size the container with CSS and stretch the iframe to fill it —
+  for example, a viewport-filling stage:
+
+  ```css
+  #crisalix-widget { height: calc(100vh - 120px); }
+  #crisalix-widget iframe { width: 100% !important; height: 100% !important; }
+  ```
+
+  (`!important` overrides the sizing the SDK applies from `data-height`.)
+  The widget's screens scroll internally, so any stage height works — it just
+  needs to stay constant while the visitor is in the flow.
 
 ## `getSelfAssessmentResults()` rejects
 

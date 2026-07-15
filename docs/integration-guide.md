@@ -77,6 +77,9 @@ Notes:
   (see [troubleshooting](troubleshooting.md)).
 - The iframe is created with `allow="camera"` so the guided selfie capture
   works. Visitors without a camera get a manual upload fallback automatically.
+- The stage can be as large as you want — including viewport-filling via CSS
+  on the container. What is unsupported is autosizing it to its content; see
+  [troubleshooting → Sizing the stage](troubleshooting.md#sizing-the-stage).
 - One widget per page is supported.
 
 ## Attributing assessments to your clinics
