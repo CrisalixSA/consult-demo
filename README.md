@@ -2,6 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/80b90c2a-4abd-452d-bdae-cc0539e10aca/deploy-status)](https://app.netlify.com/projects/non-invasive-demo/deploys)
 
+**Live demo:** <https://non-invasive-demo.netlify.app>
+
 A minimal, deployable demo of how a **partner** embeds the Crisalix self-assessment
 widget on their own website. One HTML page, no build step, no framework — exactly
 the footprint a real integration has.
