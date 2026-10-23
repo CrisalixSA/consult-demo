@@ -52,7 +52,9 @@ Everything a partner configures lives in **one script tag** in `index.html`
   (no prefix). Locally, take it from the `bin/rails db:seed` output of the
   main repo or from the internal partner admin.
 
-The optional `data-doctor-id` and `data-metadata` attributes let you attach
-your own data to each consultation.
+`data-flow` is **required**: `patient` runs the visitor's self-assessment and
+booking, `clinic` runs the practitioner's in-clinic consultation (facial
+mapping and treatment plan included). The optional `data-doctor-id` and
+`data-metadata` attributes let you attach your own data to each consultation.
 
 See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.

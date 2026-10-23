@@ -58,6 +58,10 @@
              it dynamically (createElement/appendChild) breaks the SDK — see
              docs/troubleshooting.md.
 
+           ℹ data-flow is REQUIRED: "patient" (visitor self-assessment +
+             booking) or "clinic" (practitioner consultation with facial
+             mapping and treatment plan).
+
            ℹ Optional: data-doctor-id and data-metadata attach your own
              practitioner reference and free-form metadata to every
              consultation started here — see docs/integration-guide.md.
@@ -74,6 +78,7 @@
       <div id="crisalix-widget"></div>
       <script src="https://consult-staging.crisalix.com/widget.js?partner_id=f0de80e73b0d3a8bdb765d11fa5fd0dea1ef07d60ed2b840" defer
               data-container="#crisalix-widget"
+              data-flow="patient"
               data-clinic-id="aurora-downtown"
               data-doctor-id="aurora-dr-0042"
               data-metadata='{"campaign":"aurora-landing","locale":"en"}'
@@ -115,6 +120,9 @@
           ${intake || '<tr><td colspan="3">No intake answers</td></tr>'}
         </table>`
     }
+
+    document.getElementById("crisalix-widget")
+      .addEventListener("crisalix:self-assessment-completed", (event) => render(event.detail))
 
     button.addEventListener("click", () => {
       if (!window.CrisalixWidget) {
