@@ -6,8 +6,8 @@ under the hood, and every option you can configure.
 ## Overview
 
 The widget runs the full guided self-assessment — photos, goals intake, facial
-area ranking and rating, summary with a real 3D preview — inside an `<iframe>`
-on **your** page. Your visitors never create an account and never leave your
+area ranking and rating with a real 3D preview — inside an `<iframe>` on
+**your** page. Your visitors never create an account and never leave your
 site; your page can pull their (anonymous) results through a small JavaScript
 API once they finish.
 
@@ -16,8 +16,24 @@ Integration is a single script tag:
 ```html
 <div id="crisalix-widget"></div>
 <script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
-        data-container="#crisalix-widget"></script>
+        data-container="#crisalix-widget"
+        data-flow="patient"
+        data-clinic-id="YOUR_CLINIC_ID"></script>
 ```
+
+## Choosing the flow
+
+`data-flow` is **required** and picks who drives the widget:
+
+| `data-flow` | Who uses it | Steps |
+|-------------|-------------|-------|
+| `patient` | The visitor, on your public site | 3D creation (photos) → self-assessment (intake, ranking, rating) → booking → confirmation |
+| `clinic` | A practitioner, with the patient in front of them | Welcome → 3D creation → self-assessment → facial mapping → treatment plan |
+
+Each flow renders exactly like its Crisalix app counterpart, minus the *Exit*
+button: inside your page there is no dashboard or patient record to return to.
+A missing or unknown value refuses the session with
+`X-Widget-Error: flow_required` (see [troubleshooting](troubleshooting.md)).
 
 ## Prerequisites
 
@@ -41,7 +57,8 @@ Your page ──/widget.js?partner_id──▶ Crisalix (validates identifier + 
     ▼                          ▼
 your visitors complete the assessment entirely inside the iframe
     │
-    └── getSelfAssessmentResults() ──▶ anonymous results, once completed
+    ├── crisalix:self-assessment-completed ──▶ pushed to your page on completion
+    └── getSelfAssessmentResults() ──▶ anonymous results, on demand once completed
 ```
 
 Three properties worth knowing:
@@ -65,7 +82,8 @@ is validated before the SDK is even served.
 |-------|--------|----------|---------|--------------|
 | `src` query | `partner_id` | **Yes** (production) | — | Identifies your partner account. Requests with an unknown or deactivated identifier are refused. |
 | attribute | `data-container` | No | `[data-crisalix-widget]` | CSS selector of the element the widget iframe is injected into. |
-| attribute | `data-clinic-id` | No | — | **Your** identifier for the clinic/microsite this page belongs to. First use auto-registers it on your account; every assessment started here is attributed to it. Use it to segment leads per location. |
+| attribute | `data-flow` | **Yes** | — | `patient` or `clinic` — see [Choosing the flow](#choosing-the-flow). |
+| attribute | `data-clinic-id` | **Yes** (with a `partner_id`) | — | **Your** identifier for the clinic/microsite this page belongs to. First use auto-registers it on your account; every assessment started here is attributed to it. Use it to segment leads per location. |
 | attribute | `data-doctor-id` | No | — | **Your** identifier for the doctor/practitioner behind this page (any string up to 255 characters — it maps to nothing on Crisalix's side). Stored on every consultation started here, for attribution and reporting. Never exposed through the results API. |
 | attribute | `data-metadata` | No | — | A JSON **object** of your own data (the raw attribute must stay ≤ 2048 bytes), attached to every consultation started here, for attribution and reporting. Invalid JSON, non-object values, or oversized payloads are silently ignored — they never block the widget. Never exposed through the results API. |
 | attribute | `data-height` | No | `700` | Fixed height (px) of the widget iframe. The widget's screens are phone-like and scroll internally — the iframe never resizes itself. |
@@ -102,6 +120,7 @@ the [API reference](api-reference.md) for exactly what your page can read).
 
 - [ ] Snippet `src` points at the production Crisalix host.
 - [ ] `partner_id` is your production identifier.
+- [ ] `data-flow` is set to `patient` or `clinic`, and `data-clinic-id` is set.
 - [ ] Every hostname that will embed the widget is on your domain allowlist.
 - [ ] `data-mode` is **not** present (internal development flag).
 - [ ] Your page is served over HTTPS.

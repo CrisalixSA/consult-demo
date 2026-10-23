@@ -2,6 +2,31 @@
 
 The SDK exposes one global once loaded: `window.CrisalixWidget`.
 
+## Completion event
+
+When the visitor completes the self-assessment, the widget pushes the results
+payload (below) to your page — no polling needed. Listen either way:
+
+```js
+const unsubscribe = window.CrisalixWidget.onSelfAssessmentCompleted((results) => {
+  console.log(results.ranked_regions)
+})
+
+document.querySelector("#crisalix-widget").addEventListener(
+  "crisalix:self-assessment-completed",
+  (event) => console.log(event.detail)
+)
+```
+
+- `onSelfAssessmentCompleted(callback)` returns a function that removes the
+  callback.
+- The DOM event is a bubbling `CustomEvent` dispatched on the widget
+  container, with the payload in `detail`.
+- Each completion is delivered once per page load. A listener registered after
+  it fired does not receive it — call `getSelfAssessmentResults()` instead.
+- It fires in both flows (`patient` and `clinic`) when the self-assessment
+  steps are completed.
+
 ## `CrisalixWidget.getSelfAssessmentResults([options])`
 
 Requests the visitor's self-assessment results from the widget.
@@ -77,4 +102,6 @@ The SDK and the widget talk over `postMessage` with the envelope
 wraps it — but for auditing: your page only receives messages whose `source`
 is `"crisalix-widget"`, the widget only answers requests coming from its
 direct parent window on an allowlisted origin, and replies always target your
-page's exact origin, never `*`.
+page's exact origin, never `*`. To receive the completion push, the SDK sends
+a `subscribe` message on every iframe load; the widget remembers that
+validated origin and posts `self_assessment_completed` to it only.

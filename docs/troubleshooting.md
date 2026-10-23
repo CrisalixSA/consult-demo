@@ -12,6 +12,8 @@ check the Network tab.
 | No iframe, `data-container` selector matches nothing | The container div is missing or the selector is wrong. | Ensure the container element exists before the script tag runs. |
 | `/widget.js` request → **403**, `X-Widget-Error: unknown_token` | The `partner_id` is wrong, or the partner account is deactivated. | Check the identifier against your partner account. |
 | `/widget.js` request → **403**, `X-Widget-Error: domain_not_allowed` | The page's domain is not on your account's allowlist. | Have the hostname registered (exact hostname; subdomains are not implied). |
+| Iframe shows *This widget is not available for this site (flow required)*, `X-Widget-Error: flow_required` | `data-flow` is missing or not `patient`/`clinic`. | Add `data-flow="patient"` or `data-flow="clinic"` to the script tag. |
+| Iframe shows *This widget is not available for this site (clinic id required)*, `X-Widget-Error: clinic_id_required` | `data-clinic-id` is missing or blank. | Add your clinic identifier as `data-clinic-id`. |
 | Iframe appears but the browser refuses to render it (blank + console CSP error mentioning `frame-ancestors`) | Same cause as above, enforced by the browser: the embedding page's origin is not allowlisted. | Register the domain. This protection cannot be bypassed client-side — that is the point. |
 | **406 Not Acceptable** | The visitor's browser is below the supported baseline. | Nothing on your side; the visitor needs a modern browser. |
 
