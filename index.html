@@ -106,7 +106,7 @@
 
     const render = (payload) => {
       const ratings = payload.ratings.map((r) =>
-        `<tr><td>${r.region_name}</td><td>${r.rating}/10</td><td>${r.notes || "—"}</td></tr>`
+        `<tr><td>${r.region_name}</td><td>${r.rating}/10</td><td>${[...r.concerns.map((c) => c.label), r.other].filter(Boolean).join(", ") || "—"}</td></tr>`
       ).join("")
       const intake = payload.intake.map((q) =>
         `<tr><td>${q.question}</td><td colspan="2">${q.answer}</td></tr>`
@@ -114,7 +114,7 @@
       output.innerHTML = `
         <p class="note">payload <code>version: ${payload.version}</code> · status: <strong>${payload.status}</strong></p>
         <table>
-          <tr><th>Area</th><th>Rating</th><th>Notes</th></tr>
+          <tr><th>Area</th><th>Rating</th><th>Concerns</th></tr>
           ${ratings || '<tr><td colspan="3">No ratings</td></tr>'}
           <tr><th>Question</th><th colspan="2">Answer</th></tr>
           ${intake || '<tr><td colspan="3">No intake answers</td></tr>'}
