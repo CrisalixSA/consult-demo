@@ -63,7 +63,11 @@ const results = await window.CrisalixWidget.getSelfAssessmentResults()
   "status": "completed",
   "ranked_regions": ["frontal", "orbital", "nasal", "zygomatic", "buccal", "oral", "mental", "auricular"],
   "ratings": [
-    { "region_id": "nasal", "region_name": "Nose", "rating": 7, "notes": "nostril width" }
+    {
+      "region_id": "nasal", "region_name": "Nose", "rating": 7,
+      "concerns": [{ "id": "nostril_width", "label": "Nostril width" }],
+      "other": "Slight bump since an old injury"
+    }
   ],
   "intake": [
     { "id": "top_goal", "question": "What are your aesthetic goals?", "answer": "Look refreshed" }
@@ -78,9 +82,12 @@ const results = await window.CrisalixWidget.getSelfAssessmentResults()
 | `ranked_regions` | string[] | The 8 facial region ids, ordered from the visitor's favorite to least favorite. |
 | `ratings[]` | object[] | One entry per region the visitor rated (skipped regions are omitted). |
 | `ratings[].region_id` | string | Stable region identifier (`frontal`, `orbital`, `nasal`, `zygomatic`, `buccal`, `oral`, `mental`, `auricular`). |
-| `ratings[].region_name` | string | Human-readable region name. |
+| `ratings[].region_name` | string | Human-readable region name, in the clinic's language (the partner's default language when no clinic is set). |
 | `ratings[].rating` | number | 1–10, the visitor's self-rating for the area. |
-| `ratings[].notes` | string \| null | The visitor's own words about the area. |
+| `ratings[].concerns[]` | object[] | Concerns the visitor picked for the area, in display order. Empty when none. |
+| `ratings[].concerns[].id` | string | Stable concern identifier (for example `nostril_width`). Code against this. |
+| `ratings[].concerns[].label` | string | Human-readable concern, in the clinic's language (the partner's default language when no clinic is set). |
+| `ratings[].other` | string | The visitor's own words about the area; empty string when they added none. |
 | `intake[]` | object[] | The goal/background questions the visitor answered. Multi-choice answers are comma-joined. |
 
 ### What is deliberately NOT in the payload
