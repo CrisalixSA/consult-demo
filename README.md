@@ -15,9 +15,9 @@ the footprint a real integration has.
 
 | File | Purpose |
 |------|---------|
-| `index.html` | The fake partner page: the embed snippet + an example of consuming the results API |
+| `index.html` | The fake partner page: the embed snippet + an example of consuming the results API and the event stream |
 | `docs/integration-guide.md` | How the integration works and every configuration option |
-| `docs/api-reference.md` | The `CrisalixWidget` JavaScript API and the results payload schema |
+| `docs/api-reference.md` | The `CrisalixWidget` JavaScript API and the results payload, events and signed-launch contract |
 | `docs/troubleshooting.md` | The errors you can hit and what they mean |
 
 ## Run it
@@ -52,9 +52,12 @@ Everything a partner configures lives in **one script tag** in `index.html`
   (no prefix). Locally, take it from the `bin/rails db:seed` output of the
   main repo or from the internal partner admin.
 
-`data-flow` is **required**: `patient` runs the visitor's self-assessment and
-booking, `clinic` runs the practitioner's in-clinic consultation (facial
-mapping and treatment plan included). The optional `data-doctor-id` and
-`data-metadata` attributes let you attach your own data to each consultation.
+`data-modules` is **required** for a public snippet: it lists the modules the
+widget runs (`capture`, `self_assessment`, `booking`). The clinic modules
+(`treatment_plan`, `facial_mapping`) only run from a signed clinic launch
+(`data-launch`) that **your backend** builds with the launch secret Crisalix
+provides; a static page like this demo cannot do that. The optional
+`data-doctor-id` and `data-metadata` attributes let you attach your own data
+to each consultation.
 
 See [`docs/integration-guide.md`](docs/integration-guide.md) for every option.
