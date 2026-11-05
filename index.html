@@ -33,6 +33,9 @@
     #results-output table { width: 100%; border-collapse: collapse; margin-top: .5rem; background: #fff; border-radius: 10px; overflow: hidden; }
     #results-output th, #results-output td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid #e2e8f0; }
     #results-output th { background: #fff; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    #event-log { margin: 0; padding-left: 1.25rem; font-size: .8rem; max-height: 200px; overflow-y: auto; }
+    #event-log .note { color: var(--muted); list-style: none; margin-left: -1.25rem; }
+    h4 { margin: 1.25rem 0 .5rem; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
     code { background: var(--soft); padding: .1rem .35rem; border-radius: 5px; font-size: .85em; }
   </style>
 </head>
@@ -58,9 +61,18 @@
              it dynamically (createElement/appendChild) breaks the SDK — see
              docs/troubleshooting.md.
 
-           ℹ data-flow is REQUIRED: "patient" (visitor self-assessment +
-             booking) or "clinic" (practitioner consultation with facial
-             mapping and treatment plan).
+           ℹ data-modules is REQUIRED for a public launch. It lists, comma
+             separated, the modules the widget runs. Public modules:
+             capture, self_assessment, booking. You pick WHICH modules run,
+             never their order — the widget orders them and adds any missing
+             dependency.
+
+           ℹ Clinic modules (treatment_plan, facial_mapping) never run from a
+             public snippet. They need a SIGNED clinic launch: a JWT (HS256)
+             built by YOUR backend with the launch secret Crisalix gives you,
+             passed as data-launch. A static page like this one cannot sign
+             anything (the secret must never reach a browser), so this demo
+             only uses public modules.
 
            ℹ Optional: data-doctor-id and data-metadata attach your own
              practitioner reference and free-form metadata to every
@@ -78,7 +90,7 @@
       <div id="crisalix-widget"></div>
       <script src="https://consult-staging.crisalix.com/widget.js?partner_id=f0de80e73b0d3a8bdb765d11fa5fd0dea1ef07d60ed2b840" defer
               data-container="#crisalix-widget"
-              data-flow="patient"
+              data-modules="self_assessment,booking"
               data-clinic-id="aurora-downtown"
               data-doctor-id="aurora-dr-0042"
               data-metadata='{"campaign":"aurora-landing","locale":"en"}'
@@ -89,40 +101,82 @@
     <section class="results-column">
       <h3>Pull the results into your own page</h3>
       <div class="panel">
-        <p style="margin-top:0">Once the visitor completes the assessment, your page can retrieve their
-          (anonymous) results through the SDK and use them however you like — feed a treatment
+        <p style="margin-top:0">While the visitor goes through the widget, your page can read
+          what exists so far through the SDK and react to the event stream — feed a treatment
           recommender, prefill a booking form, drive your own UI.</p>
-        <button id="get-results">Get assessment results</button>
-        <div id="results-output"><p class="note">Complete the assessment, then click the button.</p></div>
+        <button id="get-results">Get results</button>
+        <div id="results-output"><p class="note">Complete the self-assessment, then click the button.</p></div>
+        <h4>Live events</h4>
+        <ol id="event-log"><li class="note">Waiting for events…</li></ol>
       </div>
     </section>
     </div>
   </main>
 
   <script>
-    // ── Partner-side example: consuming the SDK results API ────────────────
+    // ── Partner-side example: consuming the SDK (results + events) ─────────
     const output = document.getElementById("results-output")
     const button = document.getElementById("get-results")
+    const eventLog = document.getElementById("event-log")
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c])
 
-    const render = (payload) => {
-      const ratings = payload.ratings.map((r) =>
-        `<tr><td>${r.region_name}</td><td>${r.rating}/10</td><td>${r.notes || "—"}</td></tr>`
+    // results.outputs.self_assessment holds the visitor's self-assessment.
+    const render = (results) => {
+      const assessment = results.outputs && results.outputs.self_assessment
+      const status = `<p class="note">payload <code>version: ${escapeHtml(results.version)}</code> · status: <strong>${escapeHtml(results.status)}</strong></p>`
+      const pending = results.status === "in_progress"
+        ? '<p class="note">The session is still in progress — this is what exists so far.</p>'
+        : ""
+      if (!assessment) {
+        output.innerHTML = `${status}${pending}<p class="note">The self-assessment has no output yet.</p>`
+        return
+      }
+      const ratings = (assessment.ratings || []).map((r) =>
+        `<tr><td>${escapeHtml(r.region_name)}</td><td>${escapeHtml(r.rating)}/10</td><td>${escapeHtml([...r.concerns.map((c) => c.label), r.other].filter(Boolean).join(", ") || "—")}</td></tr>`
       ).join("")
-      const intake = payload.intake.map((q) =>
-        `<tr><td>${q.question}</td><td colspan="2">${q.answer}</td></tr>`
+      const intake = (assessment.intake || []).map((q) =>
+        `<tr><td>${escapeHtml(q.question)}</td><td colspan="2">${escapeHtml(q.answer)}</td></tr>`
       ).join("")
       output.innerHTML = `
-        <p class="note">payload <code>version: ${payload.version}</code> · status: <strong>${payload.status}</strong></p>
+        ${status}${pending}
         <table>
-          <tr><th>Area</th><th>Rating</th><th>Notes</th></tr>
+          <tr><th>Area</th><th>Rating</th><th>Concerns</th></tr>
           ${ratings || '<tr><td colspan="3">No ratings</td></tr>'}
           <tr><th>Question</th><th colspan="2">Answer</th></tr>
           ${intake || '<tr><td colspan="3">No intake answers</td></tr>'}
         </table>`
     }
 
-    document.getElementById("crisalix-widget")
-      .addEventListener("crisalix:self-assessment-completed", (event) => render(event.detail))
+    const fetchResults = () => window.CrisalixWidget.getResults().then(render)
+
+    const logEvent = (event) => {
+      if (eventLog.querySelector(".note")) eventLog.innerHTML = ""
+      const refs = Object.entries(event.refs || {}).map(([k, v]) => `${k}=${v}`).join(" ")
+      const item = document.createElement("li")
+      item.innerHTML = `<code>${escapeHtml(event.type)}</code> ${escapeHtml(event.module || "—")} ${escapeHtml(refs)}`
+      eventLog.appendChild(item)
+    }
+
+    // window.CrisalixWidget only exists once the SDK has mounted, so subscribe then.
+    const whenSdkReady = (callback) => {
+      if (window.CrisalixWidget) return callback()
+      let done = false
+      const attempt = () => { if (!done && window.CrisalixWidget) { done = true; callback() } }
+      document.addEventListener("DOMContentLoaded", attempt)
+      window.addEventListener("load", attempt)
+    }
+
+    whenSdkReady(() => {
+      window.CrisalixWidget.on("*", logEvent)
+      window.CrisalixWidget.on("module_completed", (event) => {
+        if (event.module === "self_assessment") fetchResults()
+      })
+      window.CrisalixWidget.on("session_completed", () => fetchResults())
+      window.CrisalixWidget.on("session_failed", (event) => {
+        output.innerHTML = `<p class="error">The session could not start: ${escapeHtml(event.data && event.data.code)}</p>`
+      })
+    })
 
     button.addEventListener("click", () => {
       if (!window.CrisalixWidget) {
@@ -130,13 +184,8 @@
         return
       }
       button.disabled = true
-      window.CrisalixWidget.getSelfAssessmentResults()
-        .then((payload) => render(payload))
-        .catch((error) => {
-          output.innerHTML = error.message.includes("assessment_not_completed")
-            ? '<p class="note">The assessment is not finished yet — results unlock once the visitor completes every step.</p>'
-            : `<p class="error">${error.message}</p>`
-        })
+      fetchResults()
+        .catch((error) => { output.innerHTML = `<p class="error">${escapeHtml(error.message)}</p>` })
         .finally(() => { button.disabled = false })
     })
   </script>
