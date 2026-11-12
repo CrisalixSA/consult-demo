@@ -149,7 +149,8 @@ not a browser API.
 > **Planned.** This is not available yet. See
 > [Using your own product catalog](integration-guide.md#using-your-own-product-catalog).
 
-Registers the function the widget calls to read your product catalog. It
+Registers your **catalog data provider**: the function the widget calls to
+read your product catalog, one page at a time. It
 only takes effect once Crisalix has enabled the external catalog for your
 partner account. Register it on every page that opens `facial_mapping`.
 
@@ -163,7 +164,7 @@ runs once `window.CrisalixWidget` exists:
 <script src="/js/crisalix-catalog.js" defer></script>
 ```
 
-`crisalix-catalog.js` registers one function. What happens inside is up to
+`crisalix-catalog.js` registers the data provider. What happens inside is up to
 you: call your API, read a file, filter a list in memory.
 
 ```js

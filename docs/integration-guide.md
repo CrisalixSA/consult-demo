@@ -193,8 +193,8 @@ catalog in your own system, the widget can use it directly instead:
 
 1. **Crisalix enables the external catalog** for your partner account. From
    then on the widget only uses your catalog, never ours.
-2. **Your page registers one function**, `products()`, with
-   `CrisalixWidget.catalog()`. The widget calls it to get one page of
+2. **Your page registers a catalog data provider**: one function,
+   `products()`, passed to `CrisalixWidget.catalog()`. The widget calls it to get one page of
    products at a time: when the product picker opens, when the doctor scrolls
    for more, searches or picks a category.
 3. **You return products in our format.** How you get them is up to you: an
@@ -207,7 +207,7 @@ next request. Crisalix only stores a copy of the product the doctor actually
 chooses, inside the treatment plan, so the plan stays readable even if you
 later rename or remove that product.
 
-One catalog serves all your clinics. The function and the product format are
+One catalog serves all your clinics. The data provider and the product format are
 in the [API reference](api-reference.md#crisalixwidgetcatalog-products-).
 
 ## Going to production checklist
