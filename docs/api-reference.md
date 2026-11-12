@@ -151,27 +151,26 @@ not a browser API.
 
 Registers the function the widget calls to read your product catalog. It
 only takes effect once Crisalix has enabled the external catalog for your
-partner account. Register it once `window.CrisalixWidget` exists, on every
-page that opens `facial_mapping`.
+partner account. Register it on every page that opens `facial_mapping`.
+
+Load your registration script with `defer` right after `widget.js`, so it
+runs once `window.CrisalixWidget` exists:
+
+```html
+<script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
+        data-container="#crisalix-widget"
+        data-launch="<JWT built by your backend>"></script>
+<script src="/js/crisalix-catalog.js" defer></script>
+```
+
+`crisalix-catalog.js` registers one function. What happens inside is up to
+you: call your API, read a file, filter a list in memory.
 
 ```js
 window.CrisalixWidget.catalog({
   async products({ query, category, injectable, page }) {
-    // Get the products however you like: your API, a file, a list in memory.
-    const result = await myCatalog.find({ query, category, injectable, page })
-
-    return {
-      products: result.items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        brand: item.brand,
-        category: item.category,
-        unit: item.unit,
-        injectable: item.injectable
-      })),
-      categories: result.categories,
-      hasMore: result.hasMore
-    }
+    // Your code: find the products that match and return one page of them.
+    return { products: [], categories: [], hasMore: false }
   }
 })
 ```
@@ -211,6 +210,44 @@ Each product:
 | `injectable` | boolean | Only injectables can be placed on the face. |
 
 Text is shown as plain text, never as HTML.
+
+### Example
+
+An illustrative answer to `products({ query: "", category: null, injectable: false, page: 1 })`.
+The values are made up; only the shape matters.
+
+```json
+{
+  "products": [
+    {
+      "id": "sku-1042",
+      "name": "Hyaluronic acid filler, lips",
+      "brand": "Brand A",
+      "category": "Fillers",
+      "unit": "mL",
+      "injectable": true
+    },
+    {
+      "id": "sku-2210",
+      "name": "Botulinum toxin 100U",
+      "brand": "Brand B",
+      "category": "Toxins",
+      "unit": "U",
+      "injectable": true
+    },
+    {
+      "id": "sku-3007",
+      "name": "Post-treatment repair cream",
+      "brand": "Brand C",
+      "category": "Skincare",
+      "unit": "mL",
+      "injectable": false
+    }
+  ],
+  "categories": ["Fillers", "Toxins", "Skin boosters", "Skincare"],
+  "hasMore": true
+}
+```
 
 ### Errors
 
