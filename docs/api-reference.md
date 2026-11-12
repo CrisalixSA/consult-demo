@@ -182,7 +182,7 @@ window.CrisalixWidget.catalog({
 |-------|------|-------------|
 | `query` | string | What the doctor typed. Empty when they have not searched. |
 | `category` | string or `null` | The category the doctor picked, or `null` for all. |
-| `injectable` | boolean | `true` when the doctor is placing a point on the face: return only injectables. |
+| `injectable` | `true` or `null` | `true` when the doctor is placing a point on the face: return only injectables. `null`: return every product. |
 | `page` | number | Starts at `1`. The widget asks for the next page while `hasMore` is `true`. |
 
 The widget calls it when the product picker opens (`page: 1`), when the
@@ -207,14 +207,14 @@ Each product:
 | `name` | string | Required. |
 | `brand` | string | |
 | `category` | string | One of `categories`. |
-| `unit` | `"U"` or `"mL"` | |
+| `unit` | `"U"`, `"mL"` or `null` | Leave it `null` for products without a dose, such as creams. |
 | `injectable` | boolean | Only injectables can be placed on the face. |
 
-Text is shown as plain text, never as HTML.
+Text fields are limited to 255 characters and are shown as plain text, never as HTML.
 
 ### Example
 
-An illustrative answer to `products({ query: "", category: null, injectable: false, page: 1 })`.
+An illustrative answer to `products({ query: "", category: null, injectable: null, page: 1 })`.
 The values are made up; only the shape matters.
 
 ```json
@@ -241,7 +241,7 @@ The values are made up; only the shape matters.
       "name": "Post-treatment repair cream",
       "brand": "Brand C",
       "category": "Skincare",
-      "unit": "mL",
+      "unit": null,
       "injectable": false
     }
   ],
