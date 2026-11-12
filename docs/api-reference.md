@@ -144,6 +144,80 @@ The self-assessment output is **anonymous by design**. It never contains:
 If your integration needs the lead itself, that is a clinic-console workflow —
 not a browser API.
 
+## `CrisalixWidget.catalog({ products })`
+
+> **Planned.** This is not available yet. See
+> [Using your own product catalog](integration-guide.md#using-your-own-product-catalog).
+
+Registers the function the widget calls to read your product catalog. It
+only takes effect once Crisalix has enabled the external catalog for your
+partner account. Register it once `window.CrisalixWidget` exists, on every
+page that opens `facial_mapping`.
+
+```js
+window.CrisalixWidget.catalog({
+  async products({ query, category, injectable, page }) {
+    // Get the products however you like: your API, a file, a list in memory.
+    const result = await myCatalog.find({ query, category, injectable, page })
+
+    return {
+      products: result.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        brand: item.brand,
+        category: item.category,
+        unit: item.unit,
+        injectable: item.injectable
+      })),
+      categories: result.categories,
+      hasMore: result.hasMore
+    }
+  }
+})
+```
+
+### What `products()` receives
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `query` | string | What the doctor typed. Empty when they have not searched. |
+| `category` | string or `null` | The category the doctor picked, or `null` for all. |
+| `injectable` | boolean | `true` when the doctor is placing a point on the face: return only injectables. |
+| `page` | number | Starts at `1`. The widget asks for the next page while `hasMore` is `true`. |
+
+The widget calls it when the product picker opens (`page: 1`), when the
+doctor scrolls to the end of the list (`page: 2`, `3`…), and again with
+`page: 1` every time the search text or the category changes.
+
+### What `products()` returns
+
+A `Promise` (or a plain object) with:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `products` | array | One page of products, in the order to show them. |
+| `categories` | array of strings | Every category in your catalog, for the filter chips. |
+| `hasMore` | boolean | `true` if there is another page. |
+
+Each product:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Required. Must stay the same for the same product: doctors' favorites are kept by this id. |
+| `name` | string | Required. |
+| `brand` | string | |
+| `category` | string | One of `categories`. |
+| `unit` | `"U"` or `"mL"` | |
+| `injectable` | boolean | Only injectables can be placed on the face. |
+
+Text is shown as plain text, never as HTML.
+
+### Errors
+
+If no function is registered, it throws, or it does not answer within
+**10 seconds**, the widget shows "Catalog unavailable" with a retry button.
+It never falls back to another catalog.
+
 ## Message-channel details (advanced)
 
 The SDK and the widget talk over `postMessage`. You normally never touch
