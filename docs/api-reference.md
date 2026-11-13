@@ -211,7 +211,7 @@ Each product:
 | `injectable` | boolean | Only injectables can be placed on the face. When missing, a product with a `unit` counts as injectable. |
 
 Text fields are limited to 255 characters and are shown as plain text, never as HTML.
-The picker leaves out any product without a valid `id` or `name`, and any injectable without a `unit`.
+The picker leaves out any product without a valid `id` or `name`. It also leaves out any product with `injectable: true` whose `unit` is not `"U"` or `"mL"`, such as a filler sent without a unit: the doctor never sees it, and Crisalix rejects it if it is sent anyway. Any other `unit` on a non-injectable is dropped and the product is shown without a dose.
 
 ### Example
 
