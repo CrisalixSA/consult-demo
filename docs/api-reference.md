@@ -146,8 +146,8 @@ not a browser API.
 
 ## `CrisalixWidget.catalog({ products })`
 
-> **Planned.** This is not available yet. See
-> [Using your own product catalog](integration-guide.md#using-your-own-product-catalog).
+See [Using your own product catalog](integration-guide.md#using-your-own-product-catalog)
+for how it fits in your integration.
 
 Registers your **catalog data provider**: the function the widget calls to
 read your product catalog, one page at a time. It

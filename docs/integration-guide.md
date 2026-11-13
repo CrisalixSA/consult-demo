@@ -184,9 +184,6 @@ visitor's identity — and it is delivered to the treating clinic's console,
 
 ## Using your own product catalog
 
-> **Planned.** This is not available yet. We will let you know when you can
-> try it on staging.
-
 In `facial_mapping` the doctor picks products from a catalog. By default it is
 the one configured in your Crisalix account. If you already keep your
 catalog in your own system, the widget can use it directly instead:
