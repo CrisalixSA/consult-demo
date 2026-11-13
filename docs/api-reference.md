@@ -144,6 +144,119 @@ The self-assessment output is **anonymous by design**. It never contains:
 If your integration needs the lead itself, that is a clinic-console workflow —
 not a browser API.
 
+## `CrisalixWidget.catalog({ products })`
+
+See [Using your own product catalog](integration-guide.md#using-your-own-product-catalog)
+for how it fits in your integration.
+
+Registers your **catalog data provider**: the function the widget calls to
+read your product catalog, one page at a time. It
+only takes effect once Crisalix has enabled the external catalog for your
+partner account. Register it on every page that opens `facial_mapping`.
+
+Load your registration script with `defer` right after `widget.js`, so it
+runs once `window.CrisalixWidget` exists:
+
+```html
+<script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
+        data-container="#crisalix-widget"
+        data-launch="<JWT built by your backend>"></script>
+<script src="/js/crisalix-catalog.js" defer></script>
+```
+
+`crisalix-catalog.js` registers the data provider. What happens inside is up to
+you: call your API, read a file, filter a list in memory.
+
+```js
+window.CrisalixWidget.catalog({
+  async products({ query, category, injectable, page }) {
+    // Your code: find the products that match and return one page of them.
+    return { products: [], categories: [], hasMore: false }
+  }
+})
+```
+
+### What `products()` receives
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `query` | string | What the doctor typed. Empty when they have not searched. |
+| `category` | string or `null` | The category the doctor picked, or `null` for all. |
+| `injectable` | `true` or `null` | `true` when the doctor is placing a point on the face: return only injectables. `null`: return every product. If three pages in a row bring no injectable, the widget stops asking for more. |
+| `page` | number | Starts at `1`. The widget asks for the next page while `hasMore` is `true`. |
+
+The widget calls it when the product picker opens (`page: 1`), when the
+doctor scrolls to the end of the list (`page: 2`, `3`…), and again with
+`page: 1` every time the search text or the category changes.
+
+### What `products()` returns
+
+A `Promise` (or a plain object) with:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `products` | array | One page of products, in the order to show them. |
+| `categories` | array of strings | Every category in your catalog, for the filter chips. |
+| `hasMore` | boolean | `true` if there is another page. |
+
+Each product:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Required. Must stay the same for the same product: doctors' favorites are kept by this id. |
+| `name` | string | Required. |
+| `brand` | string | |
+| `category` | string | One of `categories`. |
+| `unit` | `"U"`, `"mL"` or `null` | Required for injectables. Leave it `null` for products without a dose, such as creams. |
+| `injectable` | boolean | Only injectables can be placed on the face. When missing, a product with a `unit` counts as injectable. |
+
+Text fields are limited to 255 characters and are shown as plain text, never as HTML.
+The picker leaves out any product without a valid `id` or `name`. It also leaves out any product with `injectable: true` whose `unit` is not `"U"` or `"mL"`, such as a filler sent without a unit: the doctor never sees it, and Crisalix rejects it if it is sent anyway. Any other `unit` on a non-injectable is dropped and the product is shown without a dose.
+
+### Example
+
+An illustrative answer to `products({ query: "", category: null, injectable: null, page: 1 })`.
+The values are made up; only the shape matters.
+
+```json
+{
+  "products": [
+    {
+      "id": "sku-1042",
+      "name": "Hyaluronic acid filler, lips",
+      "brand": "Brand A",
+      "category": "Fillers",
+      "unit": "mL",
+      "injectable": true
+    },
+    {
+      "id": "sku-2210",
+      "name": "Botulinum toxin 100U",
+      "brand": "Brand B",
+      "category": "Toxins",
+      "unit": "U",
+      "injectable": true
+    },
+    {
+      "id": "sku-3007",
+      "name": "Post-treatment repair cream",
+      "brand": "Brand C",
+      "category": "Skincare",
+      "unit": null,
+      "injectable": false
+    }
+  ],
+  "categories": ["Fillers", "Toxins", "Skin boosters", "Skincare"],
+  "hasMore": true
+}
+```
+
+### Errors
+
+If no function is registered, it throws, or it does not answer within
+**10 seconds**, the widget shows "Catalog unavailable" with a retry button.
+It never falls back to another catalog.
+
 ## Message-channel details (advanced)
 
 The SDK and the widget talk over `postMessage`. You normally never touch

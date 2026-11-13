@@ -182,6 +182,31 @@ visitor's identity — and it is delivered to the treating clinic's console,
 **never to your page**: the results your page receives are anonymous by design
 (see the [API reference](api-reference.md) for exactly what it can read).
 
+## Using your own product catalog
+
+In `facial_mapping` the doctor picks products from a catalog. By default it is
+the one configured in your Crisalix account. If you already keep your
+catalog in your own system, the widget can use it directly instead:
+
+1. **Crisalix enables the external catalog** for your partner account. From
+   then on the widget only uses your catalog, never ours.
+2. **Your page registers a catalog data provider**: one function,
+   `products()`, passed to `CrisalixWidget.catalog()`. The widget calls it to get one page of
+   products at a time: when the product picker opens, when the doctor scrolls
+   for more, searches or picks a category.
+3. **You return products in our format.** How you get them is up to you: an
+   API call, a JSON file, a list in memory. Crisalix never sees your
+   endpoints or credentials, and the function runs with your page's own
+   session.
+
+Your catalog stays in your system, so any change you make shows up on the
+next request. Crisalix only stores a copy of the product the doctor actually
+chooses, inside the treatment plan, so the plan stays readable even if you
+later rename or remove that product.
+
+One catalog serves all your clinics. The data provider and the product format are
+in the [API reference](api-reference.md#crisalixwidgetcatalog-products-).
+
 ## Going to production checklist
 
 - [ ] Snippet `src` points at the production Crisalix host.
