@@ -182,7 +182,7 @@ window.CrisalixWidget.catalog({
 |-------|------|-------------|
 | `query` | string | What the doctor typed. Empty when they have not searched. |
 | `category` | string or `null` | The category the doctor picked, or `null` for all. |
-| `injectable` | `true` or `null` | `true` when the doctor is placing a point on the face: return only injectables. `null`: return every product. |
+| `injectable` | `true` or `null` | `true` when the doctor is placing a point on the face: return only injectables. `null`: return every product. If three pages in a row bring no injectable, the widget stops asking for more. |
 | `page` | number | Starts at `1`. The widget asks for the next page while `hasMore` is `true`. |
 
 The widget calls it when the product picker opens (`page: 1`), when the
@@ -207,10 +207,11 @@ Each product:
 | `name` | string | Required. |
 | `brand` | string | |
 | `category` | string | One of `categories`. |
-| `unit` | `"U"`, `"mL"` or `null` | Leave it `null` for products without a dose, such as creams. |
-| `injectable` | boolean | Only injectables can be placed on the face. |
+| `unit` | `"U"`, `"mL"` or `null` | Required for injectables. Leave it `null` for products without a dose, such as creams. |
+| `injectable` | boolean | Only injectables can be placed on the face. When missing, a product with a `unit` counts as injectable. |
 
 Text fields are limited to 255 characters and are shown as plain text, never as HTML.
+The picker leaves out any product without a valid `id` or `name`, and any injectable without a `unit`.
 
 ### Example
 
