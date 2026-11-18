@@ -78,10 +78,11 @@ confirmation); Crisalix only defines the token contract below and reads
 | `locale` | both | Optional, as `data-locale`. |
 
 A patient link is not single use and works until `exp`. A completed case
-shows the final screen again and re-sends its outputs. A `treatment_plan`
-input resumes the plan and reopens its consultation when it was finished, so
-completion is announced again only after the next Finish; a bare `case`
-always opens a new consultation.
+shows the final screen again and re-sends its outputs. Every launch opens a new consultation (a visit). A `treatment_plan` input
+opens it on that plan, whose points and facial mapping carry over, and a
+bare `case` opens it on the case. The `consultation` ref changes per
+session while the `treatment_plan` ref stays, and completion is announced
+only after Finish of that visit.
 
 ```html
 <script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
