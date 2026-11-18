@@ -24,6 +24,11 @@ document.querySelector("#crisalix-widget").addEventListener(
 - `window.CrisalixWidget` exists once the SDK has mounted. Subscribe after
   that, or attach `crisalix:<type>` listeners to the container, which work at
   any time.
+- Finish completes the consultation without leaving the page: the widget
+  sends `module_completed` (`treatment_plan`, and `facial_mapping` when it
+  ran) and `session_completed` right away and shows no final screen. The plan
+  stays editable; close the widget or navigate when you receive
+  `session_completed`.
 - Events are re-sent on every page load and reopen; the SDK drops
   duplicates. A closed tab sends nothing, so abandonment is "started, never
   completed".

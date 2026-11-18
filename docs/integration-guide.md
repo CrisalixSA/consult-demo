@@ -35,7 +35,7 @@ dependencies (`self_assessment` needs `capture` unless the case already has a
 | `capture` | Patient, clinic | Photos uploaded, 3D requested | `case` |
 | `self_assessment` | Patient, clinic | Intake, ranking and rating complete | `case` |
 | `booking` | Patient | Appointment booked | `appointment` |
-| `treatment_plan` | Clinic | Doctor finishes the plan | `consultation`, `treatment_plan` |
+| `treatment_plan` | Clinic | Doctor presses Finish (the consultation completes) | `consultation`, `treatment_plan` |
 | `facial_mapping` | Clinic | Finished with the treatment plan | `consultation` |
 
 There are three ways to launch the widget:
@@ -79,8 +79,7 @@ confirmation); Crisalix only defines the token contract below and reads
 
 A patient link is not single use and works until `exp`. A completed case
 shows the final screen again and re-sends its outputs. A `treatment_plan`
-input resumes the plan when it is open and shows it read-only when it is
-completed; a bare `case` always opens a new consultation.
+input resumes the plan; a bare `case` always opens a new consultation.
 
 ```html
 <script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
