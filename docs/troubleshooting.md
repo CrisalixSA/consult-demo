@@ -70,6 +70,7 @@ with whatever exists so far and `status: "in_progress"`.
 | `CrisalixWidget` is `undefined` when your script runs | The SDK creates `window.CrisalixWidget` when it mounts, after the page has parsed. | Subscribe once it exists (for example on `DOMContentLoaded`), or listen to the container's `crisalix:<type>` DOM events, which you can attach at any time. |
 | A listener sees the same event twice | It is registered twice. The SDK already drops duplicate events when the widget re-sends them on reload or reopen. | Register each listener once. |
 | No events from a tab the visitor closed | A closed tab sends nothing. | Treat "`session_started`, never `session_completed`" as abandonment. |
+| A clinic session never sends `session_completed` | In the clinic flow it is sent only when the doctor presses Finish, never on page loads. | Wait for Finish; read the current state with `getResults()` meanwhile. |
 
 ## Local development checklist
 

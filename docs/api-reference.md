@@ -29,7 +29,11 @@ document.querySelector("#crisalix-widget").addEventListener(
   ran) and `session_completed` right away and shows no final screen. The plan
   stays editable; close the widget or navigate when you receive
   `session_completed`.
-- Events are re-sent on every page load and reopen; the SDK drops
+- In the clinic flow only Finish sends those completion events. Editing the
+  plan afterwards and reloading a page does not send them again; pressing
+  Finish again does. A repeated Finish with no changes sends identical events,
+  which the SDK drops.
+- Every other event is re-sent on every page load and reopen; the SDK drops
   duplicates. A closed tab sends nothing, so abandonment is "started, never
   completed".
 
