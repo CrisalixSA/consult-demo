@@ -54,8 +54,10 @@ document.querySelector("#crisalix-widget").addEventListener(
 `link_expired`, `unknown_token`, `domain_not_allowed`, `clinic_id_required`.
 
 `refs` are opaque references: `case` (`cs_…`), `consultation` (`cn_…`),
-`treatment_plan` (`tp_…`) and `appointment` (`ap_…`). Store them and send them
-back as `inputs` of a signed clinic launch.
+`treatment_plan` (`tp_…`) and `appointment` (`ap_…`). Store `case` and
+`treatment_plan` and send them back as `inputs` of a signed clinic launch.
+`consultation` identifies the visit (it changes on every clinic launch) and
+`appointment` the booking; both are informational and not accepted as inputs.
 
 The `treatment_plan` output lists every item with its product, quantity,
 unit, price, planned date, urgency and areas and, when `facial_mapping` ran,

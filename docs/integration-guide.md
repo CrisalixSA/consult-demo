@@ -97,8 +97,11 @@ With `data-launch`, its claims replace `data-modules`, `data-clinic-*` and
 ## References
 
 Cases (`cs_…`), consultations (`cn_…`), treatment plans (`tp_…`) and
-appointments (`ap_…`) carry opaque references. Store them and send them back
-as `inputs`; database ids never leave the widget.
+appointments (`ap_…`) carry opaque references; database ids never leave the
+widget. Store `case` and `treatment_plan` and send them back as `inputs` of a
+signed clinic launch. `consultation` identifies the visit (it changes on every
+clinic launch) and `appointment` the booking; both are informational and not
+accepted as inputs.
 
 ## Prerequisites
 
