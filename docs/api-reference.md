@@ -24,7 +24,16 @@ document.querySelector("#crisalix-widget").addEventListener(
 - `window.CrisalixWidget` exists once the SDK has mounted. Subscribe after
   that, or attach `crisalix:<type>` listeners to the container, which work at
   any time.
-- Events are re-sent on every page load and reopen; the SDK drops
+- Finish completes the consultation without leaving the page: the widget
+  sends `module_completed` (`treatment_plan`, and `facial_mapping` when it
+  ran) and `session_completed` right away and shows no final screen. The plan
+  stays editable; close the widget or navigate when you receive
+  `session_completed`.
+- In the clinic flow only Finish sends those completion events. Editing the
+  plan afterwards and reloading a page does not send them again; pressing
+  Finish again does. A repeated Finish with no changes sends identical events,
+  which the SDK drops.
+- Every other event is re-sent on every page load and reopen; the SDK drops
   duplicates. A closed tab sends nothing, so abandonment is "started, never
   completed".
 
@@ -49,8 +58,10 @@ document.querySelector("#crisalix-widget").addEventListener(
 `link_expired`, `unknown_token`, `domain_not_allowed`, `clinic_id_required`.
 
 `refs` are opaque references: `case` (`cs_…`), `consultation` (`cn_…`),
-`treatment_plan` (`tp_…`) and `appointment` (`ap_…`). Store them and send them
-back as `inputs` of a signed clinic launch.
+`treatment_plan` (`tp_…`) and `appointment` (`ap_…`). Store `case` and
+`treatment_plan` and send them back as `inputs` of a signed clinic launch.
+`consultation` identifies the visit (it changes on every clinic launch) and
+`appointment` the booking; both are informational and not accepted as inputs.
 
 The `treatment_plan` output lists every item with its product, quantity,
 unit, price, planned date, urgency and areas and, when `facial_mapping` ran,

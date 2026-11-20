@@ -35,7 +35,7 @@ dependencies (`self_assessment` needs `capture` unless the case already has a
 | `capture` | Patient, clinic | Photos uploaded, 3D requested | `case` |
 | `self_assessment` | Patient, clinic | Intake, ranking and rating complete | `case` |
 | `booking` | Patient | Appointment booked | `appointment` |
-| `treatment_plan` | Clinic | Doctor finishes the plan | `consultation`, `treatment_plan` |
+| `treatment_plan` | Clinic | Doctor presses Finish (the consultation completes) | `consultation`, `treatment_plan` |
 | `facial_mapping` | Clinic | Finished with the treatment plan | `consultation` |
 
 There are three ways to launch the widget:
@@ -78,9 +78,12 @@ confirmation); Crisalix only defines the token contract below and reads
 | `locale` | both | Optional, as `data-locale`. |
 
 A patient link is not single use and works until `exp`. A completed case
-shows the final screen again and re-sends its outputs. A `treatment_plan`
-input resumes the plan when it is open and shows it read-only when it is
-completed; a bare `case` always opens a new consultation.
+shows the final screen again and re-sends its outputs. Every clinic launch
+opens a new consultation (a visit; patient-link and public launches open
+none). A `treatment_plan` input opens it on that plan, whose points and
+facial mapping carry over, and a bare `case` opens it on the case. The
+`consultation` ref changes per session while the `treatment_plan` ref stays,
+and completion is announced only after Finish of that visit.
 
 ```html
 <script src="https://<crisalix-host>/widget.js?partner_id=YOUR_PARTNER_ID" defer
@@ -94,8 +97,11 @@ With `data-launch`, its claims replace `data-modules`, `data-clinic-*` and
 ## References
 
 Cases (`cs_…`), consultations (`cn_…`), treatment plans (`tp_…`) and
-appointments (`ap_…`) carry opaque references. Store them and send them back
-as `inputs`; database ids never leave the widget.
+appointments (`ap_…`) carry opaque references; database ids never leave the
+widget. Store `case` and `treatment_plan` and send them back as `inputs` of a
+signed clinic launch. `consultation` identifies the visit (it changes on every
+clinic launch) and `appointment` the booking; both are informational and not
+accepted as inputs.
 
 ## Prerequisites
 
