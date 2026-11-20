@@ -64,8 +64,8 @@ document.querySelector("#crisalix-widget").addEventListener(
 `appointment` the booking; both are informational and not accepted as inputs.
 
 The `treatment_plan` output lists every item with its product, quantity,
-unit, price, planned date, urgency and areas. Injection point coordinates and
-the facial mapping PDF are never sent.
+unit, price, planned date, urgency and areas. Injection point coordinates are
+never sent.
 
 Adding fields keeps version `1`. Removing or changing fields needs a new
 version, so read `version` and ignore fields you do not know.
