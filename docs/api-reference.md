@@ -154,6 +154,35 @@ The self-assessment output is **anonymous by design**. It never contains:
 If your integration needs the lead itself, that is a clinic-console workflow —
 not a browser API.
 
+## The booking output
+
+The booking lives at `outputs.booking` of `getResults()`, and is the `data` of
+its `module_completed` event. The patient proposes a preferred date and time
+plus up to two alternatives; the booking is a request until the clinic
+confirms one of them in the clinic console.
+
+```json
+{
+  "scheduled_at": "2026-12-03T10:00:00+01:00",
+  "status": "requested",
+  "alternatives": ["2026-12-04T16:30:00+01:00"],
+  "doctor_name": "Dr. Jane Doe"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `scheduled_at` | string \| null | ISO 8601. While `requested`, the patient's preferred slot; once `scheduled`, the slot the clinic confirmed. `null` before booking. |
+| `status` | string \| null | `requested` (waiting for the clinic), `scheduled` (confirmed), `completed` or `cancelled`. `null` before booking. |
+| `alternatives` | string[] | ISO 8601 alternative slots the patient proposed, at most two. Empty when there are none, before booking and after the clinic confirms. |
+| `doctor_name` | string \| null | The booked doctor, when known. |
+
+The `booking` module is done, and `refs.appointment` is set, as soon as the
+request is sent (`requested`); it does not wait for the clinic to confirm. A
+case holds one open booking (`requested` or `scheduled`) at a time. Invalid
+input (a past, repeated or incomplete slot) keeps the patient on the booking
+form with a field error; no event is sent until the request is valid.
+
 ## `CrisalixWidget.catalog({ products })`
 
 See [Using your own product catalog](integration-guide.md#using-your-own-product-catalog)

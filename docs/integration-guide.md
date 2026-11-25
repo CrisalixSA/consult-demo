@@ -34,7 +34,7 @@ dependencies (`self_assessment` needs `capture` unless the case already has a
 |--------|----------|-----------|-------------|
 | `capture` | Patient, clinic | Photos uploaded, 3D requested | `case` |
 | `self_assessment` | Patient, clinic | Intake, ranking and rating complete | `case` |
-| `booking` | Patient | Appointment booked | `appointment` |
+| `booking` | Patient | Appointment request sent (preferred slot + up to two alternatives; the clinic confirms one) | `appointment` |
 | `treatment_plan` | Clinic | Doctor presses Finish (the consultation completes) | `consultation`, `treatment_plan` |
 | `facial_mapping` | Clinic | Finished with the treatment plan | `consultation` |
 
